@@ -22,12 +22,12 @@ def get_fragmented_tables(percent=10, session=None):
        CONCAT(ROUND(index_length / ( 1024 * 1024 * 1024 ), 2), 'G') IDX, 
        CONCAT(ROUND(( data_length + index_length ) / ( 1024 * 1024 * 1024 ), 2), 'G') 'TOTAL SIZE', 
        ROUND(index_length / data_length, 2)  IDXFRAC, 
-        CONCAT(ROUND(( data_free / 1024 / 1024),2), 'MB') AS data_free,
+        CONCAT(ROUND(( data_free / 1024 / 1024),2), 'MB') AS 'DATA FREE',
        CONCAT('(',
         IF(data_free< ( data_length + index_length ), 
         CONCAT(round(data_free/(data_length+index_length)*100,2),'%'),
-       '100%'),')') AS data_free_pct
+       '100%'),')') AS 'DATA FREE%'
        FROM information_schema.TABLES  WHERE (data_free/(data_length+index_length)*100) > {limit}
-       AND table_schema <> 'mysql';""".format(limit=percent)
+       AND table_schema <> 'mysql' AND ENGINE='INNODB';""".format(limit=percent)
     result = session.run_sql(stmt)
     shell.dump_rows(result)
