@@ -49,7 +49,7 @@ def __returnDefaults(session, schema, table):
     filters.append("TABLE_NAME = :table")
     stmt = i_s.COLUMNS.select(
         "COLUMN_NAME AS ColName",
-        "DATA_TYPE AS DataType",
+        "COLUMN_TYPE AS DataType",
         "COLUMN_DEFAULT")
     stmt = stmt.where(" AND ".join(filters))
 
