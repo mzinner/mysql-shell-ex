@@ -36,7 +36,7 @@ from ext.security import expire as security_expire
 
 register_plugin("showPasswordExpire", security_expire.show_password_expire,
                 {
-                    "brief": "Lists all accounta and their expiration date",
+                    "brief": "Lists all accounts and their expiration date",
                     "parameters": [
                         {
                             "name": "show_expire",
@@ -61,3 +61,25 @@ register_plugin("showPasswordExpire", security_expire.show_password_expire,
                         "utilities"
                     ]
                 })
+
+register_plugin("showPasswordExpireSoon", security_expire.show_password_expire_soon,
+                {
+                    "brief": "Lists all accounts that will expire in specific days",
+                    "parameters": [
+                        {
+                            "name": "expire_in_days",
+                            "brief": "List accounts that will expire in that range upper limit, if none provided, the default is 30",
+                            "type": "bool",
+                            "required": False
+                        },
+                        {
+                            "name": "session",
+                            "brief": "The session to be used on the operation.",
+                            "type": "object",
+                            "classes": ["Session", "ClassicSession"],
+                            "required": False
+                        }
+                    ]
+                },
+                "security"
+                )
