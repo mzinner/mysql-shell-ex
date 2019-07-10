@@ -46,6 +46,7 @@ def __cluster_routes(router_ip, router_port, user, password):
                         print fmt.format(route_name, entry['sourceAddress'], entry['destinationAddress'], 
                         str(__format_bytes(entry['bytesFromServer'])), 
                         str(__format_bytes(entry['bytesToServer'])), entry['timeStarted'])
+                        route_name=""
                 else:
                         print fmt.format(route_name, " "," ", " ", " ",  " ") 
 
