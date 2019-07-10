@@ -71,6 +71,12 @@ register_plugin("connections", router_connections.connections,
                             "brief": "MySQL Router password for REST API",
                             "type": "string",
                             "required": True
+                        },
+                        {
+                            "name": "route_name",
+                            "brief": "MySQL Router's route (can be partial, like 'default_ro') for REST API.",
+                            "type": "string",
+                            "required": False
                         }
                     ]
                 },

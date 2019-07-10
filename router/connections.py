@@ -27,7 +27,7 @@ def __router_call(route, router_ip, router_port, user, password):
         return False
 
 
-def __cluster_routes(router_ip, router_port, user, password):
+def __cluster_routes(router_ip, router_port, user, password, route_to_find):
     result = __router_call("/routes", router_ip, router_port, user, password)
     if result: 
         result_json = json.loads(result.content)
@@ -39,20 +39,21 @@ def __cluster_routes(router_ip, router_port, user, password):
         print bar
         for item in result_json['items']:
                 route_name = item['name']
-                result_item = __router_call("/routes/%s/connections" % route_name, router_ip, router_port, user, password)
-                result_item_json = json.loads(result_item.content)
-                if len(result_item_json['items']) > 0:
-                    for entry in result_item_json['items']:
-                        print fmt.format(route_name, entry['sourceAddress'], entry['destinationAddress'], 
-                        str(__format_bytes(entry['bytesFromServer'])), 
-                        str(__format_bytes(entry['bytesToServer'])), entry['timeStarted'])
-                        route_name=""
-                else:
-                        print fmt.format(route_name, " "," ", " ", " ",  " ") 
+                if route_to_find in route_name:
+                    result_item = __router_call("/routes/%s/connections" % route_name, router_ip, router_port, user, password)
+                    result_item_json = json.loads(result_item.content)
+                    if len(result_item_json['items']) > 0:
+                        for entry in result_item_json['items']:
+                            print fmt.format(route_name, entry['sourceAddress'], entry['destinationAddress'], 
+                            str(__format_bytes(entry['bytesFromServer'])), 
+                            str(__format_bytes(entry['bytesToServer'])), entry['timeStarted'])
+                            route_name=""
+                    else:
+                            print fmt.format(route_name, " "," ", " ", " ",  " ") 
 
-                print bar
+                    print bar
                     
 
-def connections(router_ip, router_port, user, password):
-    __cluster_routes(router_ip, router_port, user, password)
+def connections(router_ip, router_port, user, password, route_to_find=""):
+    __cluster_routes(router_ip, router_port, user, password, route_to_find)
     
