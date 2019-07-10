@@ -15,10 +15,15 @@ def __format_bytes(size):
 
 def __router_call(route, router_ip, router_port, user, password):
     url = "http://" + router_ip + ":" + str(router_port) + "/api/" + api_ver + route
-    resp = requests.get(url,auth=(user, password))
+    try:
+        resp = requests.get(url,auth=(user, password))
+    except:
+        print("ERROR: Impossible to connect to the MySQL Router REST API")
+        return False
     if resp.status_code == 200:
         return resp
     else:
+        print("ERROR: Got error %d when trying to connect to the MySQL Router REST API" % resp.status_code)
         return False
 
 
