@@ -12,7 +12,7 @@ router = shell.create_extension_object()
 def create(ip, port, user, password):
     my_router = MyRouter(ip, port, user, password)
     return { 
-         'connections': lambda: my_router.connections(), 
+         'connections': lambda route_to_find="": my_router.connections(route_to_find), 
          'status': lambda: my_router.status(), 
          'api': my_router.api
     }
