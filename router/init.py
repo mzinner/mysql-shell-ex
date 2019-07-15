@@ -4,86 +4,33 @@
 from ext.mysqlsh_plugins_common import register_plugin
 from ext.router import status as router_status
 from ext.router import connections as router_connections
-
-register_plugin("status", router_status.status,
-                {
-                    "brief": "Get MySQL Router info",
-                    "parameters": [
-                        {
-                            "name": "router_ip",
-                            "brief": "IP of MySQL Router",
-                            "type": "string",
-                            "required": True
-                        },
-                        {
-                            "name": "router_port",
-                            "brief": "TCP port where MySQL Router REST API is listening.",
-                            "type": "integer",
-                            "required": True
-                        },
-                        {
-                            "name": "user",
-                            "brief": "MySQL Router user for REST API",
-                            "type": "string",
-                            "required": True
-                        },
-                        {
-                            "name": "password",
-                            "brief": "MySQL Router password for REST API",
-                            "type": "string",
-                            "required": True
-                        }
-                    ]
-                },
-                "router",
-                {
-                    "brief": "MySQL Router management and utilities.",
-                    "details": [
-                        "A collection of MySQL Router management tools"
-                    ]
-                })
+from ext.router.myrouter import MyRouter
 
 
-register_plugin("connections", router_connections.connections,
-                {
-                    "brief": "Get Connections in MySQL Router",
-                    "parameters": [
-                        {
-                            "name": "router_ip",
-                            "brief": "IP of MySQL Router",
-                            "type": "string",
-                            "required": True
-                        },
-                        {
-                            "name": "router_port",
-                            "brief": "TCP port where MySQL Router REST API is listening.",
-                            "type": "integer",
-                            "required": True
-                        },
-                        {
-                            "name": "user",
-                            "brief": "MySQL Router user for REST API",
-                            "type": "string",
-                            "required": True
-                        },
-                        {
-                            "name": "password",
-                            "brief": "MySQL Router password for REST API",
-                            "type": "string",
-                            "required": True
-                        },
-                        {
-                            "name": "route_name",
-                            "brief": "MySQL Router's route (can be partial, like 'default_ro') for REST API.",
-                            "type": "string",
-                            "required": False
-                        }
-                    ]
-                },
-                "router",
-                {
-                    "brief": "MySQL Router management and utilities.",
-                    "details": [
-                        "A collection of MySQL Router management tools"
-                    ]
-                })
+router = shell.create_extension_object()
+
+def create(ip, port, user, password):
+    my_router = MyRouter(ip, port, user, password)
+    return { 
+         'connections': lambda: my_router.connections(), 
+         'status': lambda: my_router.status(), 
+         'api': my_router.api
+    }
+                        
+shell.add_extension_object_member(router, 'create', lambda ip, port, user, password=False:create(ip, port, user, password), 
+            {
+                'brief':'Create the MySQL Router Object', 'details':['It has MyRouter methods.'], 
+                'parameters':[
+                                {'name':'ip', 'type':'string', 'required':True, 'brief':'ip'},
+                                {'name':'port', 'type':'integer', 'required':True, 'brief':'port'},
+                                {'name':'user', 'type':'string', 'required':True, 'brief':'user'},
+                                {'name':'password', 'type':'string', 'required':False, 'brief':'password'}
+                        ]
+                }
+            )
+
+shell.add_extension_object_member(ext, 'router', router, 
+{
+    'brief':'MySQL Router Object', 
+    'details':['MySQL Router Object.']
+})
