@@ -17,12 +17,12 @@ class MyRouter:
     def __format_bytes(self, size):
         # 2**10 = 1024
         power = 2**10
-        n = 0
-        power_labels = {0 : 'bytes', 1: 'kb', 2: 'mb', 3: 'gb', 4: 'tb'}
-        while size > power:
+        for unit in ('bytes', 'kb', 'mb', 'gb'):
+            if size <= power:
+                return "%d %s" % (size, unit)
             size /= power
-            n += 1
-        return "%d %s" % (size, power_labels[n])
+
+        return "%d tb" % (size,)
 
     def __router_call(self,route):
 
