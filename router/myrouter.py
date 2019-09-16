@@ -46,9 +46,9 @@ class MyRouter:
             fmt = "| {0:22s} | {1:18s} | {2:12s} | {3:>20s} | {4:>20s} | {5:27s} |"
             header = fmt.format("Route", "Source", "Destination", "From Server", "To Server", "Connection Started")
             bar = "+" + "-" * 24 + "+" + "-" * 20 + "+" + "-" * 14 + "+" + "-" * 22 + "+" + "-" * 22 + "+" + "-" * 29 + "+"
-            print bar
-            print header
-            print bar
+            print (bar)
+            print (header)
+            print (bar)
             for item in result_json['items']:
                     route_name = item['name']
                     if route_to_find in route_name:
@@ -56,31 +56,31 @@ class MyRouter:
                         result_item_json = json.loads(result_item.content)
                         if len(result_item_json['items']) > 0:
                             for entry in result_item_json['items']:
-                                print fmt.format(route_name, entry['sourceAddress'], entry['destinationAddress'], 
+                                print (fmt.format(route_name, entry['sourceAddress'], entry['destinationAddress'], 
                                 str(self.__format_bytes(entry['bytesFromServer'])), 
-                                str(self.__format_bytes(entry['bytesToServer'])), entry['timeStarted'])
+                                str(self.__format_bytes(entry['bytesToServer'])), entry['timeStarted']))
                                 route_name=""
                         else:
-                                print fmt.format(route_name, " "," ", " ", " ",  " ") 
+                                print (fmt.format(route_name, " "," ", " ", " ",  " "))
 
-                        print bar
+                        print (bar)
                         
 
     def __cluster_metadata_status(self, cluster_name):
         result = self.__router_call("/metadata/%s/status" % cluster_name)
         if result:    
             result_json = json.loads(result.content)
-            print "     Refresh Succeeded: " + str(result_json['refreshSucceeded'])
-            print "        Refresh Failed: " + str(result_json['refreshFailed'])
-            print " Last Refresh Hostname: " + result_json['lastRefreshHostname'] \
-                    + ":" + str(result_json['lastRefreshPort'])
+            print ("     Refresh Succeeded: " + str(result_json['refreshSucceeded']))
+            print ("        Refresh Failed: " + str(result_json['refreshFailed']))
+            print (" Last Refresh Hostname: " + result_json['lastRefreshHostname'] \
+                    + ":" + str(result_json['lastRefreshPort']))
 
     def __cluster_all_routes(self):
         result = self.__router_call("/routes")
         if result:    
-            print "   +--------+"
-            print "   | routes |"
-            print "   +--------+"
+            print ("   +--------+")
+            print ("   | routes |")
+            print ("   +--------+")
             result_json = json.loads(result.content)
             for item in result_json['items']:
                     route_name = item['name']
@@ -106,9 +106,9 @@ class MyRouter:
         if result:    
             result_json = json.loads(result.content)
             cluster_name = result_json['items'][0]['name']
-            print "+" + "-" * 16 + "-" * len(cluster_name) + "+"
-            print "| Cluster name: %s |" % cluster_name
-            print "+" + "-" * 16 + "-" * len(cluster_name) + "+"
+            print ("+" + "-" * 16 + "-" * len(cluster_name) + "+")
+            print ("| Cluster name: %s |" % cluster_name)
+            print ("+" + "-" * 16 + "-" * len(cluster_name) + "+")
             return cluster_name
         return False
 
