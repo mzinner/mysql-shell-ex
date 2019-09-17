@@ -9,6 +9,23 @@ from ext.router.myrouter import MyRouter
 
 router = shell.create_extension_object()
 
+
+# Check if global object 'ext' has already been registered
+if 'ext' in globals():
+    global_obj = ext
+else:
+    # If not, register a new global object named 'ext' now
+    global_obj = shell.create_extension_object()
+    shell.register_global("ext", global_obj,
+        {
+            "brief": "MySQL Shell community plugins.",
+            "details": [
+                "The global object ext is the entry points for "
+                "MySQL Shell extensions."
+            ]
+        })
+
+
 def create(ip, port, user, password):
     my_router = MyRouter(ip, port, user, password)
     return { 
@@ -29,7 +46,7 @@ shell.add_extension_object_member(router, 'create', lambda ip, port, user, passw
                 }
             )
 
-shell.add_extension_object_member(ext, 'router', router, 
+shell.add_extension_object_member(global_obj, 'router', router, 
 {
     'brief':'MySQL Router Object', 
     'details':['MySQL Router Object.']
